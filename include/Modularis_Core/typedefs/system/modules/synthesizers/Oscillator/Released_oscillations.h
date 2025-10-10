@@ -1,3 +1,0 @@
-#pragma once
-
-typedef struct MDLRS_Released_oscillations MDLRS_Released_oscillations;

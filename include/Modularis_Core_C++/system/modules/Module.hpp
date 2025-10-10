@@ -1,9 +1,9 @@
 /*
-(C) 2022-2024 Серый MLGamer. All freedoms preserved.
+(C) 2022-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -14,48 +14,21 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #pragma once
 
-#include <cstdint>
-#include <Modularis_Core_C++/ports/Ports_folder.hpp>
+#include <cstddef>
 
 namespace MDLRS
 {
+	struct Port_group;
 	struct Modularis;
 
 	struct Module
 	{
-		Modularis *project;
-		uint32_t index;
-		Ports_folder inputs, outputs;
-		uint32_t output_connections;
-		bool ready;
-
-		Module(Modularis &project);
-		Module();
-		inline void
-			update(),
-			get_ready(),
-			disconnect();
-		virtual void on_update();
-		~Module();
+		void *operator new[](size_t size)=delete;
+		Port_group *get_inputs();
+		Port_group *get_outputs();
+		Modularis *get_project();
+		void disconnect();
+		void operator delete(void *data);
+		void operator delete[](void *data)=delete;
 	};
-	void Module::update()
-	{
-		if (ready)
-		{
-			ready=false;
-			inputs.update();
-			on_update();
-		}
-	}
-	void Module::get_ready()
-	{
-		if (ready) return;
-		ready=true;
-		inputs.get_ready();
-	}
-	void Module::disconnect()
-	{
-		inputs.disconnect_input();
-		outputs.disconnect();
-	}
 }

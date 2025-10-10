@@ -1,9 +1,9 @@
 /*
-(C) 2024 Серый MLGamer. All freedoms preserved.
+(C) 2024-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -16,23 +16,20 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #include <Modularis_Core_C++/system/modules/Module.hpp>
 
-#include <Modularis_Core_C++/ports/Sound.hpp>
+#include <cstddef>
 
 namespace MDLRS
 {
 	struct Modularis;
+	struct Sound;
 
 	struct Modulator: Module
 	{
-		Sound carrier, modulator;
-		Sound output;
-
-		Modulator(Modularis &project);
-		void on_update();
-		inline ~Modulator();
+		void *operator new(size_t size, Modularis *project);
+		Modulator(Modularis *project);
+		Sound *get_carrier();
+		Sound *get_modulator();
+		Sound *get_output();
+		~Modulator();
 	};
-	Modulator::~Modulator()
-	{
-		disconnect();
-	}
 }

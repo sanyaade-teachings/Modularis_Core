@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -14,31 +14,37 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #pragma once
 
-#include <Modularis_Core_C++/ports/Ports_folder.hpp>
+#include <Modularis_Core_C++/ports/Port_group.hpp>
 
-#include <Modularis_Core_C++/ports/controllers/Real_controller.hpp>
+#include <cstddef>
 
 namespace MDLRS
 {
 	struct Module;
+	struct Real_controller;
 
-	struct ADSR: Ports_folder
+	enum ADSR_state
 	{
-		Real_controller attack, decay, sustain, release;
-
-		ADSR(Module *module, float attack, float decay, float sustain, float release);
-		inline float pressed(float time);
-		inline float released(float time);
+		ATTACK,
+		DECAY,
+		SUSTAIN,
+		RELEASE
 	};
-	float ADSR::pressed(float time)
+	struct ADSR: Port_group
 	{
-		if (time<attack.value) return time/attack.value;
-		if (time<attack.value+decay.value) return sustain.value+(1-sustain.value)*(1-(time-attack.value)/decay.value);
-		return sustain.value;
-	}
-	float ADSR::released(float time)
-	{
-		if (time<release.value) return sustain.value*(1-time/release.value);
-		return 0;
-	}
+		void *operator new(size_t size, Module *module);
+		ADSR(Module *module, float attack, float decay, float sustain, float release);
+		void
+			set_attack(float attack),
+			set_decay(float decay),
+			set_sustain(float sustain),
+			set_release(float release);
+		Real_controller
+			*get_attack(),
+			*get_decay(),
+			*get_sustain(),
+			*get_release();
+		float envelope(ADSR_state state, float time);
+		~ADSR();
+	};
 }

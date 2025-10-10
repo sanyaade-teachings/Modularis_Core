@@ -95,7 +95,7 @@ class Modularis_Core(MakePy):
 		if "INSTALLATION_FOLDER" in defines: self.INSTALL_PREFIX=defines["INSTALLATION_FOLDER"]
 		elif self.HOST_OPERATING_SYSTEM=="Linux": self.INSTALL_PREFIX=GNU_INSTALLATION_FOLDER
 		elif self.HOST_OPERATING_SYSTEM=="Windows": self.INSTALL_PREFIX=WINDOWS_INSTALLATION_FOLDER
-		self.C_COMPILE_FLAGS=["-fPIC", "-fms-extensions"]
+		self.C_COMPILE_FLAGS=["-fPIC", "-Isrc/libmodularis0/include"]
 		self.CFLAGS=["-O", "-s", "-Iinclude"]
 		self.LDFLAGS=["-O", "-s"]
 		packages=Dependencies(packages=["libmodularis0", "libmodularis-dev", "libmodularis-cpp-dev"])
@@ -119,10 +119,15 @@ class Modularis_Core(MakePy):
 				[self.shared_library("modularis", "0")]
 			)
 		})
-		self.SRC="src/libmodularis0"
+		self.SRC="src/libmodularis0/src"
 		self.OBJ="out/obj/libmodularis0"
-		if self.TARGET_OPERATING_SYSTEM=="Linux": Shared_library_C(self, "modularis", "Note_chorus.o", "Transpose.o", "Amplifier.o", "Delay.o", "Modulator.o", "Sequencer.o", "Oscillator.o", "Sampler.o", "ADSR.o", "Integer_controller.o", "Real_controller.o", "Note.o", "Ports_folder.o", "Sound.o", "Pressed_oscillations.o", "Released_oscillations.o", "Pressed_samples.o", "Released_samples.o", "Sample.o", "Module.o", "Output.o", "Port.o", "Pattern_none.o", "Pattern.o", "Modularis.o", revision="0", ldflags=["-lm"])
-		elif self.TARGET_OPERATING_SYSTEM=="Windows": Shared_library_C(self, "modularis", "Note_chorus.o", "Transpose.o", "Amplifier.o", "Delay.o", "Modulator.o", "Sequencer.o", "Oscillator.o", "Sampler.o", "ADSR.o", "Integer_controller.o", "Real_controller.o", "Note.o", "Ports_folder.o", "Sound.o", "Pressed_oscillations.o", "Released_oscillations.o", "Pressed_samples.o", "Released_samples.o", "Sample.o", "Module.o", "Output.o", "Port.o", "Pattern_none.o", "Pattern.o", "Modularis.o", revision="0")
+		objects=["IModule.o", "Module_extension.o", "IPort.o", "Port_extension.o", "Note_chorus.o", "Transpose.o", "Amplifier.o", "Delay.o", "Modulator.o", "Sequencer.o", "Oscillator.o", "ADSR.o", "Integer_controller.o", "Real_controller.o", "Note.o", "Port_group.o", "Sound.o", "Module.o", "Output.o", "Note_table.o", "Any_port.o", "Port.o", "safe memory.o", "Continuous_key.o", "Note_key.o", "Modularis.o"]
+		if self.TARGET_OPERATING_SYSTEM=="Linux": Shared_library_C(self, "modularis", *objects, revision="0", ldflags=["-lm"])
+		elif self.TARGET_OPERATING_SYSTEM=="Windows": Shared_library_C(self, "modularis", *objects, revision="0")
+		Object_C(self, "extensions/modules/IModule.c")
+		Object_C(self, "extensions/modules/Module_extension.c")
+		Object_C(self, "extensions/ports/IPort.c")
+		Object_C(self, "extensions/ports/Port_extension.c")
 		Object_C(self, "modules/effects/note/Note_chorus.c")
 		Object_C(self, "modules/effects/note/Transpose.c")
 		Object_C(self, "modules/effects/sound/Amplifier.c")
@@ -130,23 +135,20 @@ class Modularis_Core(MakePy):
 		Object_C(self, "modules/effects/sound/Modulator.c")
 		Object_C(self, "modules/players/Sequencer.c")
 		Object_C(self, "modules/synthesizers/Oscillator.c")
-		Object_C(self, "modules/synthesizers/Sampler.c")
 		Object_C(self, "ports/controllers/ADSR.c")
 		Object_C(self, "ports/controllers/Integer_controller.c")
 		Object_C(self, "ports/controllers/Real_controller.c")
 		Object_C(self, "ports/Note.c")
-		Object_C(self, "ports/Ports_folder.c")
+		Object_C(self, "ports/Port_group.c")
 		Object_C(self, "ports/Sound.c")
-		Object_C(self, "system/modules/synthesizers/Oscillator/Pressed_oscillations.c")
-		Object_C(self, "system/modules/synthesizers/Oscillator/Released_oscillations.c")
-		Object_C(self, "system/modules/synthesizers/Sampler/Pressed_samples.c")
-		Object_C(self, "system/modules/synthesizers/Sampler/Released_samples.c")
-		Object_C(self, "system/modules/synthesizers/Sampler/Sample.c")
 		Object_C(self, "system/modules/Module.c")
 		Object_C(self, "system/modules/Output.c")
+		Object_C(self, "system/ports/Note/Note_table.c")
+		Object_C(self, "system/ports/Any_port.c")
 		Object_C(self, "system/ports/Port.c")
-		Object_C(self, "user/modules/players/Sequencer/Pattern_none.c")
-		Object_C(self, "user/modules/players/Sequencer/Pattern.c")
+		Object_C(self, "system/safe memory.c")
+		Object_C(self, "user/modules/players/Sequencer/Continuous_key.c")
+		Object_C(self, "user/modules/players/Sequencer/Note_key.c")
 		Object_C(self, "Modularis.c")
 		Clean(self, "libmodularis0")
 		if self.TARGET_OPERATING_SYSTEM=="Linux":
@@ -182,31 +184,7 @@ class Modularis_Core(MakePy):
 		})
 		self.SRC="src/libmodularis-cpp-dev"
 		self.OBJ="out/obj/libmodularis-cpp-dev"
-		Static_library(self, "modularis-cpp", "Note_chorus.o", "Transpose.o", "Amplifier.o", "Delay.o", "Modulator.o", "Sequencer.o", "Oscillator.o", "Sampler.o", "ADSR.o", "Integer_controller.o", "Real_controller.o", "Note.o", "Ports_folder.o", "Sound.o", "Pressed_oscillations.o", "Released_oscillations.o", "Pressed_samples.o", "Released_samples.o", "Sample.o", "Module.o", "Output.o", "Port.o", "Pattern_none.o", "Pattern.o", "Modularis.o")
-		Object_Cpp(self, "modules/effects/note/Note_chorus.cpp")
-		Object_Cpp(self, "modules/effects/note/Transpose.cpp")
-		Object_Cpp(self, "modules/effects/sound/Amplifier.cpp")
-		Object_Cpp(self, "modules/effects/sound/Delay.cpp")
-		Object_Cpp(self, "modules/effects/sound/Modulator.cpp")
-		Object_Cpp(self, "modules/players/Sequencer.cpp")
-		Object_Cpp(self, "modules/synthesizers/Oscillator.cpp")
-		Object_Cpp(self, "modules/synthesizers/Sampler.cpp")
-		Object_Cpp(self, "ports/controllers/ADSR.cpp")
-		Object_Cpp(self, "ports/controllers/Integer_controller.cpp")
-		Object_Cpp(self, "ports/controllers/Real_controller.cpp")
-		Object_Cpp(self, "ports/Note.cpp")
-		Object_Cpp(self, "ports/Ports_folder.cpp")
-		Object_Cpp(self, "ports/Sound.cpp")
-		Object_Cpp(self, "system/modules/synthesizers/Oscillator/Pressed_oscillations.cpp")
-		Object_Cpp(self, "system/modules/synthesizers/Oscillator/Released_oscillations.cpp")
-		Object_Cpp(self, "system/modules/synthesizers/Sampler/Pressed_samples.cpp")
-		Object_Cpp(self, "system/modules/synthesizers/Sampler/Released_samples.cpp")
-		Object_Cpp(self, "system/modules/synthesizers/Sampler/Sample.cpp")
-		Object_Cpp(self, "system/modules/Module.cpp")
-		Object_Cpp(self, "system/modules/Output.cpp")
-		Object_Cpp(self, "system/ports/Port.cpp")
-		Object_Cpp(self, "user/modules/players/Sequencer/Pattern_none.cpp")
-		Object_Cpp(self, "user/modules/players/Sequencer/Pattern.cpp")
+		Static_library(self, "modularis-cpp", "Modularis.o")
 		Object_Cpp(self, "Modularis.cpp")
 		Clean(self, "libmodularis-cpp-dev")
 		if self.TARGET_OPERATING_SYSTEM=="Linux":
@@ -331,17 +309,17 @@ class Modularis_Core(MakePy):
 		Remove(self, "libmodularis-cpp-dev")
 		if PACKAGE_TYPE=="deb":
 			Package(self, "pack", "all").dependencies["pack"]=packages
-			Package(self, "pack", "libmodularis0").dependencies["pack"]=Dependencies([self.deb("libmodularis0", "0.0.0pre-alpha")])
-			Package(self, "pack", "libmodularis-dev").dependencies["pack"]=Dependencies([self.deb("libmodularis-dev", "0.0.0pre-alpha")])
-			Package(self, "pack", "libmodularis-cpp-dev").dependencies["pack"]=Dependencies([self.deb("libmodularis-cpp-dev", "0.0.0pre-alpha")])
-			Deb(self, "libmodularis0", "0.0.0pre-alpha")
-			Deb(self, "libmodularis-dev", "0.0.0pre-alpha")
-			Deb(self, "libmodularis-cpp-dev", "0.0.0pre-alpha")
+			Package(self, "pack", "libmodularis0").dependencies["pack"]=Dependencies([self.deb("libmodularis0", "0.0.0pre")])
+			Package(self, "pack", "libmodularis-dev").dependencies["pack"]=Dependencies([self.deb("libmodularis-dev", "0.0.0pre")])
+			Package(self, "pack", "libmodularis-cpp-dev").dependencies["pack"]=Dependencies([self.deb("libmodularis-cpp-dev", "0.0.0pre")])
+			Deb(self, "libmodularis0", "0.0.0pre")
+			Deb(self, "libmodularis-dev", "0.0.0pre")
+			Deb(self, "libmodularis-cpp-dev", "0.0.0pre")
 		else:
-			Pack_archive(self, "all", "libmodularis_0.0.0pre-alpha_"+MULTIARCH+"."+PACKAGE_TYPE, "libmodularis0", "libmodularis-dev", "libmodularis-cpp-dev")
-			Pack_archive(self, "libmodularis0", "libmodularis0_0.0.0pre-alpha_"+MULTIARCH+"."+PACKAGE_TYPE)
-			Pack_archive(self, "libmodularis-dev", "libmodularis-dev_0.0.0pre-alpha_"+MULTIARCH+"."+PACKAGE_TYPE)
-			Pack_archive(self, "libmodularis-cpp-dev", "libmodularis-cpp-dev_0.0.0pre-alpha_"+MULTIARCH+"."+PACKAGE_TYPE)
+			Pack_archive(self, "all", "libmodularis_0.0.0pre_"+MULTIARCH+"."+PACKAGE_TYPE, "libmodularis0", "libmodularis-dev", "libmodularis-cpp-dev")
+			Pack_archive(self, "libmodularis0", "libmodularis0_0.0.0pre_"+MULTIARCH+"."+PACKAGE_TYPE)
+			Pack_archive(self, "libmodularis-dev", "libmodularis-dev_0.0.0pre_"+MULTIARCH+"."+PACKAGE_TYPE)
+			Pack_archive(self, "libmodularis-cpp-dev", "libmodularis-cpp-dev_0.0.0pre_"+MULTIARCH+"."+PACKAGE_TYPE)
 class Gzip(Path):
 	def __init__(self, host, path, folder=None, name=None):
 		if name==None: name=basename(path)+".gz"

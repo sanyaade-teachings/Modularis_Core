@@ -1,9 +1,9 @@
 /*
-(C) 2022-2024 Серый MLGamer. All freedoms preserved.
+(C) 2022-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -14,31 +14,41 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #pragma once
 
-#include <cstdint>
-#include <Modularis_Core_C++/system/modules/Output.hpp>
 #include <Modularis_Core_C++/system/types/Sound_value.hpp>
-#include <Modularis_Core_C++/ports/Sound.hpp>
-#include <cstdlib>
+#include <cstddef>
 
 namespace MDLRS
 {
+	struct Safe_block;
 	struct Module;
+	struct Output;
 
 	struct Modularis
 	{
-		uint32_t sample_rate; /**Sample rate of a sound stream.*/
+		unsigned sample_rate; /**Sample rate of a sound stream.*/
 		bool lazy_update; /**Don't update disconnected modules.*/
+		bool dispose_leaks; /**Dispose "safe memory" blocks if they are not disposed during cleanup due to memory leaks.*/
+		Safe_block *last_block; /**A last block of "safe memory" system block list.*/
+		size_t block_count, max_block_count, allocated, max_allocated; /**"Safe memory" system memory account.*/
 		Module **disconnected_modules; /**Modules that aren't connected to any module.*/
-		uint32_t disconnected_modules_size; /**Size of an array.*/
-		uint32_t disconnected_modules_count; /**Elements count in an array.*/
-		Output output; /**Module for returning new frames of a sound stream.*/
+		unsigned disconnected_modules_count; /**Element count in an array.*/
+		unsigned note_scancode;
+		Output *output; /**Module for returning new frames of a sound stream.*/
 
 		/**
 		 * Create an instance of Modularis program generating a sound stream.
 		 * @param sample_rate the sample rate of a sound stream.
 		 * @param channels the number of channels in a stream.
+		 * @returns an instance of Modularis in the heap.
 		 */
-		inline Modularis(uint32_t sample_rate, uint32_t channels);
+		void *operator new(size_t size);
+		void *operator new[](size_t size)=delete;
+		/**
+		 * Initialize an instance of Modularis program generating a sound stream.
+		 * @param sample_rate the sample rate of a sound stream.
+		 * @param channels the number of channels in a stream.
+		 */
+		Modularis(unsigned sample_rate, unsigned channels);
 		/**
 		 * Update all modules in the Modularis project. If lazy_update field is true, then disconnected modules are excluded.
 		 */
@@ -48,23 +58,9 @@ namespace MDLRS
 		 * @param channel
 		 * @return a value of sound frame.
 		 */
-		inline Sound_value get(uint32_t channel);
-		inline ~Modularis();
+		Sound_value get(unsigned channel);
+		~Modularis();
+		void operator delete(void *data);
+		void operator delete[](void *data)=delete;
 	};
-	Modularis::Modularis(uint32_t sample_rate, uint32_t channels): output(this, channels)
-	{
-		this->sample_rate=sample_rate;
-		lazy_update=true;
-		disconnected_modules=NULL;
-		disconnected_modules_size=0;
-		disconnected_modules_count=0;
-	}
-	Sound_value Modularis::get(uint32_t channel)
-	{
-		return output.channels[channel].frame;
-	}
-	Modularis::~Modularis()
-	{
-		if (disconnected_modules) free(disconnected_modules);
-	}
 }

@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -16,15 +16,18 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #include <Modularis_Core_C++/system/ports/Port.hpp>
 
+#include <cstddef>
+
 namespace MDLRS
 {
 	struct Module;
 
 	struct Real_controller: Port
 	{
-		float value;
-
+		void *operator new(size_t size, Module *module);
 		Real_controller(Module *module, float value);
-		void on_update();
+		void set(float value);
+		float get();
+		~Real_controller();
 	};
 }

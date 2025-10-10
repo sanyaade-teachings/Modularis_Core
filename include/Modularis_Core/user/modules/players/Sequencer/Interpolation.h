@@ -1,6 +1,5 @@
 #pragma once
 
-typedef enum MDLRS_Interpolation MDLRS_Interpolation;
 enum MDLRS_Interpolation
 {
 	INTERPOLATION_NONE,

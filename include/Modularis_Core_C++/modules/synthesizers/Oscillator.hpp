@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -16,32 +16,28 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #include <Modularis_Core_C++/system/modules/Module.hpp>
 
-#include <Modularis_Core_C++/ports/Note.hpp>
-#include <Modularis_Core_C++/ports/controllers/Real_controller.hpp>
-#include <Modularis_Core_C++/ports/controllers/Integer_controller.hpp>
-#include <Modularis_Core_C++/ports/controllers/ADSR.hpp>
-#include <Modularis_Core_C++/ports/Sound.hpp>
-#include <Modularis_Core_C++/system/modules/synthesizers/Oscillator/Released_oscillations.hpp>
-#include <cstdint>
+#include <cstddef>
 
 namespace MDLRS
 {
-	struct Pressed_oscillations;
 	struct Modularis;
+	struct Note;
+	struct Real_controller;
+	struct Integer_controller;
+	struct ADSR;
+	struct Sound;
 
 	struct Oscillator: Module
 	{
-		Note input;
-		Real_controller volume;
-		Integer_controller waveform;
-		ADSR envelope;
-		Sound output;
-		Released_oscillations released;
-		Pressed_oscillations *pressed;
-		uint32_t pressed_count;
-
-		Oscillator(Modularis &project);
-		void on_update();
+		void *operator new(size_t size, Modularis *project);
+		Oscillator(Modularis *project);
+		void set_volume(float volume);
+		void set_waveform(unsigned waveform);
+		Note *get_input();
+		Real_controller *get_volume();
+		Integer_controller *get_waveform();
+		ADSR *get_envelope();
+		Sound *get_output();
 		~Oscillator();
 	};
 }

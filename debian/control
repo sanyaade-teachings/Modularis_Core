@@ -23,9 +23,9 @@ Description: Modularis Core modular sound synthesis framework
  Modularis Core framework architecture makes it possible to create very different music editors, be it sequencer DAW, modular synthesizer, tracker or even drum machine!
    * Program music!
  It is possible to make music using Modularis Core framework without any DAW. Choose the programming language supported by the framework, create an instance of Modularis class, instances of modules, connect them with each other, configure them and make sound!
-   * Connect plugins! (not implemented yet)
- Modularis Core framework supports VST3 and LV2 plugins. It also has its own flexible and extensible plugin system.
-   * Save your compositions to files! (also not implemented)
+   * Connect plugins!
+ Modularis Core framework supports its own flexible and extensible plugin system. VST3 and LV2 plugin support will be added in the future.
+   * Save your compositions to files! (not implemented)
  Modularis Core framework implements extensible Modularis project file format based on JSON for possibility of manual editing (just in case). A file contains information about settings and connections of modules. It also can contain information for the DAW the project was created in (or something else). You can create either light file with external dependencies on plugins, samples or something else or heavy, but portable file with embedded dependencies.
 
 Package: libmodularis0

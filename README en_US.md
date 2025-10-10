@@ -40,11 +40,11 @@ Synthesizers, effects and control tools are modules that can be connected to oth
 
 It is possible to make music using *Modularis Core* framework **without any DAW**. Choose the programming language supported by the framework, create an instance of `Modularis` class, instances of modules, connect them with each other, configure them and **make sound**!
 
-### Connect plugins! (not implemented yet)
+### Connect plugins!
 
-*Modularis Core* framework supports **VST3** and **LV2** plugins. It also has its own flexible and extensible plugin system.
+*Modularis Core* framework supports its own flexible and extensible plugin system. **VST3** and **LV2** plugin support will be added in the future.
 
-### Save your compositions to files! (also not implemented)
+### Save your compositions to files! (not implemented)
 
 *Modularis Core* framework implements **extensible Modularis project file format** based on JSON for possibility of manual editing (just in case). A file contains information about settings and connections of modules. It also can contain information for the DAW the project was created in (or something else). You can create either light file with external dependencies on plugins, samples or something else or heavy, but portable file with embedded dependencies.
 
@@ -60,17 +60,21 @@ You should have received a copy of the GNU General Public License along with Mod
 
 ***Only* free** (*as in freedom*) software under the terms of the GNU General Public License can be based on the *Modularis Core* framework.
 
-# The Global Update! The framework has been filled with new features!
+# The framework is very close to the full release!
 
-## Modularis Core 0.0.0pre-alpha
+## Modularis Core 0.0.0pre
 
-A lot of new modules have been added and existing modules have been improved.
+The core of **reverse compatibility** has been created and some improvements have been added throughout the framework.
+
+Moreover, the framework's proprietary **extension** system has been implemented! Create your own modules and even ports aside the framework. *VST3 and LV2 plugin support hasn't been implemented yet. :)*
 
 ## Framework contents
 
   * Modularis
 
-It has feature of singlethreaded sound synthesis. It has "lazy update" mode - modules that are not connected, directly or indirectly, to the Output module are not updated. System sound frame format is 32-bit floating point number.
+It features singlethreaded sound synthesis. It has "lazy update" mode &ndash; modules that are not connected, directly or indirectly, to the `Output` module are not updated. System sound frame format is 32-bit floating point number.
+
+"Safe memory" system has been implemented in order to detect memory leaks.
 
 ### Modules
 
@@ -78,19 +82,15 @@ It has feature of singlethreaded sound synthesis. It has "lazy update" mode - mo
 
   * Sequencer
 
-The feature of tone and velocity change has been added. The key "frames" system has been implemented for that. Tone, phase and velocity can be changed independedly on each other. 5 tone and velocity interpolation modes available: `INTERPOLATION_NONE`, `INTERPOLATION_LINEAR`, `INTERPOLATION_FAST`, `INTERPOLATION_SLOW`, `INTERPOLATION_SMOOTH`. Infinite polyphony. Compact data.
+It features playing notes in patterns with different tone, velocity and phase change behavior. 5 tone and velocity interpolation modes available: `INTERPOLATION_NONE`, `INTERPOLATION_LINEAR`, `INTERPOLATION_FAST`, `INTERPOLATION_SLOW`, `INTERPOLATION_SMOOTH`. Infinite polyphony. Compact data.
 
-The multitrack pattern system has been implemented. There are plans to add several pattern types in order to improve music creation comfort and save memory for slow devices where this library is going to be used.
+`Any_pattern` and `Pattern_none` pattern types have been removed due to their redundancy. `Pattern_none` behavior can be reproduced by an instance of class `Pattern` with track count equal to zero.
 
 #### Synthesizers
 
   * Oscillator
 
-ADSR-envelope support has been added. The module has feature of polyphonic sound playing with one of the 4 waveform types: sine `0`, triangle `1`, saw `2`, square `3`.
-
-  * Sampler
-
-This is the simple sampler with ADSR-envelope, polyphony and loop support and without sample interpolation support. The module is in development, but you can use it.
+It features polyphonic sound playing with ADSR envelope of the following 4 waveform types: sine `0`, triangle `1`, saw `2`, square `3`.
 
 #### Effects
 
@@ -100,7 +100,7 @@ The note processing effect for supersaws creation.
 
   * Transpose
 
-Notes transposition.
+Note transposition.
 
   * Amplifier
 
@@ -114,11 +114,19 @@ Sound delay. If you make a feedback chain with these modules, you can get an ech
 
 The amplitude modulation sound effect.
 
+#### Extension interface
+
+  * IModule
+
+The base class for third-party modules creation. Inherit it and override virtual method `on_update()` to create your module.
+
 ### Ports
 
   * Note
 
 The port to convey notes.
+
+The system of unique note "scancodes" has been implemented to allow free connection of `Note` ports.
 
   * Sound
 
@@ -136,13 +144,19 @@ The real number controller.
 
   * ADSR
 
-The real number controllers group: `attack`, `decay`, `sustain`, `release`.
+The real number controller group: `attack`, `decay`, `sustain`, `release`. It has a method to calculate envelope level.
 
-#### System
+#### Miscellaneous
 
-  * Ports_folder
+  * Port_group
 
-The ports group that can be connected to other ports and groups or disconnected from them as one.
+The group of ports that can be connected to other ports and groups or disconnected from them as one.
+
+#### Extension interface
+
+  * IPort
+
+The base class for third-party ports creation. Inherit it and override virtual method `on_update()` to create your port.
 
 Now you know about the framework features at this moment. It is time to test them!
 
@@ -241,7 +255,7 @@ After the procedures above you can test the framework by building and running th
 
 ![The player](share/player.png)
 
-First of all, install the framework (see Installation and also [Релизы](https://gitverse.ru/Seriy_MLGamer/Modularis_Core/releases) section at GitVerse). Then install SDL2, SDL2_image and SDL2_ttf libraries. Your PC must support OpenGL no earlier than version 2.0. After that run this command in "test" folder, if you want to test the player with GUI:
+First of all, install the framework (see Installation and also [Релизы](https://gitverse.ru/Seriy_MLGamer/Modularis_Core/releases) section at GitVerse). Then install SDL2, SDL2_image and SDL2_ttf libraries. Your PC must support OpenGL no earlier than version 2.0. After that run this command in "test" folder if you want to test the player with GUI:
 
 #### Bash
 

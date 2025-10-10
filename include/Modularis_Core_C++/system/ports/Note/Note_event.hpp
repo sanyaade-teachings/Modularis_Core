@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -14,15 +14,18 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #pragma once
 
-#include <Modularis_Core_C++/system/ports/Note/Note_type.hpp>
-#include <cstdint>
-
 namespace MDLRS
 {
+	enum Note_type
+	{
+		NOTE_START,
+		NOTE_CHANGE,
+		NOTE_STOP
+	};
 	struct Note_event
 	{
 		Note_type type;
-		uint32_t scancode;
-		float pitch, phase, velocity;
+		unsigned scancode;
+		float pitch, velocity, phase;
 	};
 }

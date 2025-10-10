@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #include <Modularis_Core_C++/system/ports/Port.hpp>
 
+#include <cstddef>
 #include <cstdint>
 
 namespace MDLRS
@@ -24,9 +25,10 @@ namespace MDLRS
 
 	struct Integer_controller: Port
 	{
-		int32_t value;
-
+		void *operator new(size_t size, Module *module);
 		Integer_controller(Module *module, int32_t value);
-		void on_update();
+		void set(int32_t value);
+		int32_t get();
+		~Integer_controller();
 	};
 }

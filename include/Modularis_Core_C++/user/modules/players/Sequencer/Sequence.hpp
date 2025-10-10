@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License along with Mod
 namespace MDLRS
 {
 	struct Note_key;
-	struct Discrete_key;
 	struct Continuous_key;
+	struct Discrete_key;
 
 	struct Sequence
 	{
 		Note_key *notes;
-		Discrete_key *phases;
 		Continuous_key *velocities;
+		Discrete_key *phases;
 	};
 }

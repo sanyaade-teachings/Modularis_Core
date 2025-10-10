@@ -1,3 +1,0 @@
-#pragma once
-
-typedef struct MDLRS_Pressed_oscillations MDLRS_Pressed_oscillations;

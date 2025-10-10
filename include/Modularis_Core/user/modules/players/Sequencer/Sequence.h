@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core.
@@ -14,15 +14,13 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #pragma once
 
-#include <Modularis_Core/typedefs/user/modules/players/Sequencer/Sequence.h>
-
-#include <Modularis_Core/typedefs/user/modules/players/Sequencer/Note_key.h>
-#include <Modularis_Core/typedefs/user/modules/players/Sequencer/Discrete_key.h>
-#include <Modularis_Core/typedefs/user/modules/players/Sequencer/Continuous_key.h>
+struct MDLRS_Note_key;
+struct MDLRS_Continuous_key;
+struct MDLRS_Discrete_key;
 
 struct MDLRS_Sequence
 {
-	MDLRS_Note_key *notes;
-	MDLRS_Discrete_key *phases;
-	MDLRS_Continuous_key *velocities;
+	struct MDLRS_Note_key *notes;
+	struct MDLRS_Continuous_key *velocities;
+	struct MDLRS_Discrete_key *phases;
 };

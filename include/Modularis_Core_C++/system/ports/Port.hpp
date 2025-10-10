@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -16,46 +16,25 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #include <Modularis_Core_C++/system/ports/Any_port.hpp>
 
-#include <cstdint>
-#include <Modularis_Core_C++/system/ports/Connection.hpp>
-#include <cstdlib>
-
 namespace MDLRS
 {
-	struct Module;
-	struct Ports_folder;
+	struct Port_group;
 
 	struct Port: Any_port
 	{
-		const char *type;
-		Module *module;
-		Connection *connections;
-		uint32_t connections_size;
-		uint32_t connections_count;
-
-		Port(const char *type, Module *module);
 		int
 			connect(Any_port *port),
 			connect_port(Port *port),
-			connect_folder(Ports_folder *folder),
+			connect_group(Port_group *group),
 			disconnect(),
 			disconnect(Any_port *port),
 			disconnect_port(Port *port),
-			disconnect_folder(Ports_folder *folder),
+			disconnect_group(Port_group *group),
 			disconnect_input();
 		void update();
 		void get_ready();
-		virtual void on_update()=0;
-		inline uint32_t find_connection(Port *port);
-		inline ~Port();
+		Port *connection(unsigned connection);
+		unsigned count();
+		unsigned find_connection(Port *port);
 	};
-	uint32_t Port::find_connection(Port *port)
-	{
-		for (uint32_t a=0; a!=connections_count; a++) if (connections[a].port==port) return a+1;
-		return 0;
-	}
-	Port::~Port()
-	{
-		if (connections) free(connections);
-	}
 }

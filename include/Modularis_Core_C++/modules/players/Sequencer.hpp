@@ -1,9 +1,9 @@
 /*
-(C) 2023-2024 Серый MLGamer. All freedoms preserved.
+(C) 2023-2025 Серый MLGamer. All freedoms preserved.
 Дзен: <https://dzen.ru/seriy_mlgamer>
 SoundCloud: <https://soundcloud.com/seriy_mlgamer>
 YouTube: <https://www.youtube.com/@Seriy_MLGamer>
-GitHub: <https://github.com/Seriy-MLGamer>
+GitVerse: <https://gitverse.ru/Seriy_MLGamer>
 E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Modularis Core C++.
@@ -16,51 +16,33 @@ You should have received a copy of the GNU General Public License along with Mod
 
 #include <Modularis_Core_C++/system/modules/Module.hpp>
 
-#include <Modularis_Core_C++/ports/controllers/Real_controller.hpp>
-#include <Modularis_Core_C++/ports/controllers/Integer_controller.hpp>
-#include <Modularis_Core_C++/ports/Note.hpp>
-#include <cstdint>
-#include <cstdlib>
+#include <cstddef>
 
 namespace MDLRS
 {
-	struct Any_pattern;
-	struct Patterns_sequence_data;
-	struct Pattern_data;
 	struct Modularis;
+	struct Real_controller;
+	struct Integer_controller;
+	struct Note;
+	struct Pattern;
 
 	struct Sequencer: Module
 	{
-		Real_controller BPM;
-		Integer_controller LPB;
-		Real_controller cursor_position;
-		Integer_controller loop;
-		Integer_controller play;
-		Note output;
-		Any_pattern ***tracks;
-		Patterns_sequence_data *tracks_data;
-		Pattern_data *patterns_data;
-		uint32_t tracks_count;
-		uint32_t sequences_count;
-		uint32_t time;
-		bool is_playing;
-		bool is_position_changed;
-
-		Sequencer(Modularis &project);
-		void add(Any_pattern ***tracks, uint32_t tracks_count);
-		inline void set_position(float cursor_position);
-		void on_update();
-		inline ~Sequencer();
+		void *operator new(size_t size, Modularis *project);
+		Sequencer(Modularis *project);
+		void
+			set_BPM(float BPM),
+			set_LPB(float LPB),
+			set_position(float cursor_position),
+			set_loop(bool loop),
+			set_play(bool play);
+		Real_controller *get_BPM();
+		Integer_controller *get_LPB();
+		Real_controller *get_position();
+		Integer_controller *get_loop();
+		Integer_controller *get_play();
+		Note *get_output();
+		void add(Pattern ***tracks, unsigned track_count);
+		~Sequencer();
 	};
-	void Sequencer::set_position(float cursor_position)
-	{
-		this->cursor_position.value=cursor_position;
-		is_position_changed=true;
-	}
-	Sequencer::~Sequencer()
-	{
-		disconnect();
-		if (tracks_data) free(tracks_data);
-		if (patterns_data) free(patterns_data);
-	}
 }
